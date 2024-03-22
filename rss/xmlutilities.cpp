@@ -1,4 +1,5 @@
 #include "xmlutilities.h"
+#include "utils.h"
 
 #include <cstring>
 
@@ -40,7 +41,7 @@ std::string get_xml_content(xmlNode* node, xmlDocPtr doc)
 	}
 	xmlBufferFree(buf);
 
-	return result;
+	return newsboat::utils::sanitize_utf8(result);
 }
 
 void cleanup_namespaces(xmlNodePtr node)

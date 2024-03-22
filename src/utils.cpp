@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "libnewsboat-ffi/src/utils.rs.h"
 #include <iostream>
 
 #include <algorithm>
@@ -190,6 +191,12 @@ std::string utils::locale_to_utf8(const std::string& text)
 			reinterpret_cast<const unsigned char*>(text.c_str()),
 			text.length());
 	return std::string(utils::bridged::locale_to_utf8(text_slice));
+}
+
+std::string utils::sanitize_utf8(const std::string& text)
+{
+	const auto result = utils::bridged::sanitize_utf8(text);
+	return std::string(reinterpret_cast<const char*>(result.data()), result.size());
 }
 
 std::string utils::get_command_output(const std::string& cmd)

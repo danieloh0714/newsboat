@@ -1052,6 +1052,12 @@ pub fn locale_to_utf8(text: &[u8]) -> String {
     String::from_utf8(converted).expect("convert_text() returned a non-UTF-8 string")
 }
 
+/// Replaces any invalid UTF-8 characters with U+FFFD.
+pub fn sanitize_utf8(text: String) -> String {
+    // TODO: actually sanitize UTF-8
+    return text;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
