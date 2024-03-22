@@ -2,9 +2,7 @@
 
 #include <cstring>
 
-#include "config.h"
 #include "feed.h"
-#include "item.h"
 #include "rss09xparser.h"
 #include "utils.h"
 

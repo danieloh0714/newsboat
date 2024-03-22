@@ -1,8 +1,5 @@
 #include "rss10parser.h"
 
-#include <cstring>
-
-#include "config.h"
 #include "feed.h"
 #include "item.h"
 #include "rsspp_uris.h"
