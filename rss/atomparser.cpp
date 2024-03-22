@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include "config.h"
-#include "exception.h"
 #include "feed.h"
 #include "item.h"
 #include "medianamespace.h"
@@ -15,10 +14,6 @@ namespace rsspp {
 
 void AtomParser::parse_feed(Feed& f, xmlNode* rootNode)
 {
-	if (!rootNode) {
-		throw Exception(_("XML root node is NULL"));
-	}
-
 	switch (f.rss_version) {
 	case Feed::ATOM_0_3:
 		ns = ATOM_0_3_URI;

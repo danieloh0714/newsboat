@@ -3,7 +3,6 @@
 #include <cstring>
 
 #include "config.h"
-#include "exception.h"
 #include "feed.h"
 #include "item.h"
 #include "rsspp_uris.h"
@@ -16,10 +15,6 @@ namespace rsspp {
 
 void Rss10Parser::parse_feed(Feed& f, xmlNode* rootNode)
 {
-	if (!rootNode) {
-		throw Exception(_("XML root node is NULL"));
-	}
-
 	for (xmlNode* node = rootNode->children; node != nullptr;
 		node = node->next) {
 		if (node_is(node, "channel", RSS_1_0_NS)) {

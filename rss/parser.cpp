@@ -295,83 +295,83 @@ Feed Parser::parse_file(const std::string& filename)
 
 Feed Parser::parse_xmlnode(xmlNode* node)
 {
+	if (!node) {
+		throw Exception(_("XML root node is NULL"));
+	}
+
 	Feed f;
 
-	if (node) {
-		if (node->name && node->type == XML_ELEMENT_NODE) {
-			if (strcmp((const char*)node->name, "rss") == 0) {
-				const char* version = (const char*)xmlGetProp(
-						node, (const xmlChar*)"version");
-				if (!version) {
-					xmlFree((void*)version);
-					throw Exception(_("no RSS version"));
-				}
-				if (strcmp(version, "0.91") == 0) {
-					f.rss_version = Feed::RSS_0_91;
-				} else if (strcmp(version, "0.92") == 0) {
-					f.rss_version = Feed::RSS_0_92;
-				} else if (strcmp(version, "0.94") == 0) {
-					f.rss_version = Feed::RSS_0_94;
-				} else if (strcmp(version, "2.0") == 0 ||
-					strcmp(version, "2") == 0) {
-					f.rss_version = Feed::RSS_2_0;
-				} else if (strcmp(version, "1.0") == 0) {
-					f.rss_version = Feed::RSS_0_91;
-				} else {
-					xmlFree((void*)version);
-					throw Exception(
-						_("invalid RSS version"));
-				}
+	if (node->name && node->type == XML_ELEMENT_NODE) {
+		if (strcmp((const char*)node->name, "rss") == 0) {
+			const char* version = (const char*)xmlGetProp(
+					node, (const xmlChar*)"version");
+			if (!version) {
 				xmlFree((void*)version);
-			} else if (strcmp((const char*)node->name, "RDF") ==
-				0) {
-				f.rss_version = Feed::RSS_1_0;
-			} else if (strcmp((const char*)node->name, "feed") ==
-				0) {
-				if (node->ns && node->ns->href) {
-					if (strcmp((const char*)node->ns->href,
-							ATOM_0_3_URI) == 0) {
-						f.rss_version = Feed::ATOM_0_3;
-					} else if (strcmp((const char*)node->ns
-							->href,
-							ATOM_1_0_URI) == 0) {
-						f.rss_version = Feed::ATOM_1_0;
-					} else {
-						const char* version = (const char*)xmlGetProp(node, (const xmlChar*)"version");
-						if (!version) {
-							xmlFree((void*)version);
-							throw Exception(_(
-									"invalid Atom "
-									"version"));
-						}
-						if (strcmp(version, "0.3") ==
-							0) {
-							xmlFree((void*)version);
-							f.rss_version =
-								Feed::ATOM_0_3_NONS;
-						} else {
-							xmlFree((void*)version);
-							throw Exception(_(
-									"invalid Atom "
-									"version"));
-						}
-					}
-				} else {
-					throw Exception(_("no Atom version"));
-				}
+				throw Exception(_("no RSS version"));
 			}
-
-			std::shared_ptr<RssParser> parser =
-				RssParserFactory::get_object(f.rss_version, doc);
-
-			try {
-				parser->parse_feed(f, node);
-			} catch (Exception& e) {
-				throw;
+			if (strcmp(version, "0.91") == 0) {
+				f.rss_version = Feed::RSS_0_91;
+			} else if (strcmp(version, "0.92") == 0) {
+				f.rss_version = Feed::RSS_0_92;
+			} else if (strcmp(version, "0.94") == 0) {
+				f.rss_version = Feed::RSS_0_94;
+			} else if (strcmp(version, "2.0") == 0 ||
+				strcmp(version, "2") == 0) {
+				f.rss_version = Feed::RSS_2_0;
+			} else if (strcmp(version, "1.0") == 0) {
+				f.rss_version = Feed::RSS_0_91;
+			} else {
+				xmlFree((void*)version);
+				throw Exception(
+					_("invalid RSS version"));
+			}
+			xmlFree((void*)version);
+		} else if (strcmp((const char*)node->name, "RDF") ==
+			0) {
+			f.rss_version = Feed::RSS_1_0;
+		} else if (strcmp((const char*)node->name, "feed") ==
+			0) {
+			if (node->ns && node->ns->href) {
+				if (strcmp((const char*)node->ns->href,
+						ATOM_0_3_URI) == 0) {
+					f.rss_version = Feed::ATOM_0_3;
+				} else if (strcmp((const char*)node->ns
+						->href,
+						ATOM_1_0_URI) == 0) {
+					f.rss_version = Feed::ATOM_1_0;
+				} else {
+					const char* version = (const char*)xmlGetProp(node, (const xmlChar*)"version");
+					if (!version) {
+						xmlFree((void*)version);
+						throw Exception(_(
+								"invalid Atom "
+								"version"));
+					}
+					if (strcmp(version, "0.3") ==
+						0) {
+						xmlFree((void*)version);
+						f.rss_version =
+							Feed::ATOM_0_3_NONS;
+					} else {
+						xmlFree((void*)version);
+						throw Exception(_(
+								"invalid Atom "
+								"version"));
+					}
+				}
+			} else {
+				throw Exception(_("no Atom version"));
 			}
 		}
-	} else {
-		throw Exception(_("XML root node is NULL"));
+
+		std::shared_ptr<RssParser> parser =
+			RssParserFactory::get_object(f.rss_version, doc);
+
+		try {
+			parser->parse_feed(f, node);
+		} catch (Exception& e) {
+			throw;
+		}
 	}
 
 	return f;

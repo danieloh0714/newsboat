@@ -17,10 +17,6 @@ namespace rsspp {
 
 void Rss09xParser::parse_feed(Feed& f, xmlNode* rootNode)
 {
-	if (!rootNode) {
-		throw Exception(_("XML root node is NULL"));
-	}
-
 	globalbase = get_prop(rootNode, "base", XML_URI);
 
 	xmlNode* channel = rootNode->children;
